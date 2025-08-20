@@ -73,4 +73,22 @@ public class ImageController {
     public Long getLikeCount(@Parameter(description = "ID изображения") @PathVariable Long idImage) {
         return imageService.getLikeCount(idImage);
     }
+
+
+    @Operation(summary = "Поставить дизлайк")
+    @GetMapping("/dislike/{idImage}")
+    public void dislike(@Parameter(description = "ID изображения") @PathVariable Long idImage) {
+        imageService.dislikeImage(idImage);
+    }
+    @Operation(summary = "Убрать дизлайк")
+    @DeleteMapping("/dislike/{idImage}")
+    public void unDislike(@Parameter(description = "ID изображения") @PathVariable Long idImage) {
+        imageService.unDislikeImage(idImage);
+    }
+
+    @Operation(summary = "Кол-во дизлайков")
+    @GetMapping("/dislikeCount/{idImage}")
+    public Long getDislikeCount(@Parameter(description = "ID изображения") @PathVariable Long idImage) {
+        return imageService.getDislikeCount(idImage);
+    }
 }

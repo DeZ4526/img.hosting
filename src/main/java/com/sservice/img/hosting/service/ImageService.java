@@ -1,8 +1,10 @@
 package com.sservice.img.hosting.service;
 
 import com.sservice.img.hosting.dto.ImageData;
+import com.sservice.img.hosting.dto.ImageDislikeData;
 import com.sservice.img.hosting.dto.ImageLike;
 import com.sservice.img.hosting.dto.UserData;
+import com.sservice.img.hosting.repository.ImageDislikeRepository;
 import com.sservice.img.hosting.repository.ImageLikeRepository;
 import com.sservice.img.hosting.repository.ImageRepository;
 import com.sservice.img.hosting.repository.UserRepository;
@@ -27,12 +29,14 @@ import java.util.List;
 public class ImageService {
     private final ImageRepository imageRepository;
     private final ImageLikeRepository imageLikeRepository;
+    private final ImageDislikeRepository imageDislikeRepository;
     private final UserRepository userRepository;
 
     private final String uploadDir = "uploads/";
-    public ImageService(ImageRepository imageRepository, ImageLikeRepository imageLikeRepository, UserRepository userRepository) {
+    public ImageService(ImageRepository imageRepository, ImageLikeRepository imageLikeRepository, ImageDislikeRepository imageDislikeRepository, UserRepository userRepository) {
         this.imageRepository = imageRepository;
         this.imageLikeRepository = imageLikeRepository;
+        this.imageDislikeRepository = imageDislikeRepository;
         this.userRepository = userRepository;
         new File(uploadDir).mkdirs();
     }
@@ -109,7 +113,7 @@ public class ImageService {
                 .ifPresent(like -> {
                     throw new IllegalStateException("You already liked this image");
                 });
-
+        unDislikeImage(imageId);
         imageLikeRepository.save(new ImageLike(user, image));
     }
 
@@ -126,6 +130,40 @@ public class ImageService {
 
         return imageLikeRepository.countByImageId(imageId);
     }
+
+
+
+    public void dislikeImage(Long imageId) {
+        UserData user = getUserData();
+
+        long userId = user.getId();
+
+        ImageData image = imageRepository.findById(imageId)
+                .orElseThrow(() -> new EntityNotFoundException("Image not found, id=" + imageId ));
+
+        imageDislikeRepository.findByUserIdAndImageId(user.getId(), imageId)
+                .ifPresent(like -> {
+                    throw new IllegalStateException("You already disliked this image");
+                });
+        unlikeImage(imageId);
+        imageDislikeRepository.save(new ImageDislikeData(user, image));
+    }
+
+    public void unDislikeImage(Long imageId) {
+        UserData user = getUserData();
+
+        imageDislikeRepository.deleteByUserIdAndImageId(user.getId(), imageId);
+    }
+
+    public long getDislikeCount(Long imageId) {
+        if (!imageRepository.existsById(imageId)) {
+            throw new EntityNotFoundException("Image not found, id=" + imageId);
+        }
+
+        return imageDislikeRepository.countByImageId(imageId);
+    }
+
+
     private UserData getUserData() {
         return  (UserData) SecurityContextHolder
                 .getContext()

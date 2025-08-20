@@ -21,7 +21,6 @@ public interface ImageLikeRepository extends JpaRepository<ImageLike, Long> {
     @Transactional
     void deleteByUserIdAndImageId(Long userId, Long imageId);
 
-    // (пример SQL-запроса напрямую)
     @Query("SELECT COUNT(l) FROM ImageLike l WHERE l.image.id = :imageId")
     long getLikeCount(Long imageId);
 }
