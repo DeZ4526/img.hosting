@@ -28,12 +28,7 @@ public class SecurityConfig {
                         // Публичные эндпоинты для регистрации и логина
                         .requestMatchers("/api/Auth/register", "/api/Auth/login").permitAll()
                         // Swagger и OpenAPI публично
-                        .requestMatchers(HttpMethod.GET,
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/docs/**",
-                                "/v3/api-docs/**"
-                        ).permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
                         // Пример защищённого эндпоинта
                         .requestMatchers("/api/Image/get_all").hasAnyRole("ADMIN", "MANAGER")
                         .requestMatchers("/api/users/get_all").hasAnyRole("ADMIN", "MANAGER")

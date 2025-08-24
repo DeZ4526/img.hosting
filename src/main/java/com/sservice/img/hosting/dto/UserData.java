@@ -1,5 +1,6 @@
 package com.sservice.img.hosting.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,6 +21,7 @@ public class UserData  implements UserDetails {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 

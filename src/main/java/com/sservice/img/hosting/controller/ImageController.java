@@ -23,13 +23,13 @@ public class ImageController {
     }
 
     @Operation(summary = "Получить список всех изображений")
-    @GetMapping("/get_all")
+    @GetMapping("/get/all")
     public List<ImageData> getAllImages () {
         return imageService.getAllImages();
     }
 
     @Operation(summary = "Получить список моих изображений")
-    @GetMapping("/my/all")
+    @GetMapping("/get/my")
     public List<ImageData> getAllMyImages () {
         return imageService.getAllMyImages();
     }
@@ -51,7 +51,7 @@ public class ImageController {
         );
     }
     @Operation(summary = "Получить изображение по ID", description = "Возвращает изображение в виде файла")
-    @GetMapping("/get_image_by_id/{idImage}")
+    @GetMapping("/get/{idImage}")
     public ResponseEntity<Resource> getImage(@Parameter(description = "ID изображения") @PathVariable Long idImage) throws IOException {
 
         return imageService.getImage(idImage);
